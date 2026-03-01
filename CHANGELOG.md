@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.2
+
+New names
+
 ## v1.0.1
 
 All Texts to the translation files
