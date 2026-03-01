@@ -14,10 +14,11 @@ A PrestaShop module that displays custom text on product pages for customers bel
 
 ## Installation
 
-1. Copy the `internautenb2binfo` folder to your PrestaShop installation
-2. Go to Back Office → Modules → Module Manager
-3. Find "Internauten B2B Info" and click Install
-4. Configure the module settings
+1. Get latest release ZIP File or complete source
+2. Copy the `internautenb2binfo` folder to your PrestaShop installation
+3. Go to Back Office → Modules → Module Manager
+4. Find "Internauten B2B Info" and click Install
+5. Configure the module settings
 
 ## Configuration
 
@@ -56,6 +57,26 @@ Notes:
 
 - The release text is taken from the matching section in `CHANGELOG.md`.
 - If no section is present, commit messages are used as release notes automatically.
+
+## Get Module and install it
+
+1. git clone yor fork of this repo
+   ```bash
+   cd ~
+   git clone https://github.com/yourgithub/InternautenB2BInfo.git
+   ```
+2. set owner, goup and rights
+   ```bash
+   sudo chown -R www-data:www-data ~/InternautenB2BInfo/internautenb2binfo
+   ```
+3. Create symlink and set group:owner
+   ```bash
+   sudo ln -s ~/InternautenB2BInfo/internautenb2binfo /var/www/prestashop/modules/internautenb2binfo
+   sudo chown -h www-data:www-data ~/InternautenB2BInfo/internautenb2binfo
+   sudo chown -h www-data:www-data /var/www/prestashop/modules/internautenb2binfo
+   ```
+4. Activate and configure Module in Prestashop  
+   In Prestashop backend go to Module Manager / not installed Modules and install the module.
 
 ## License
 
