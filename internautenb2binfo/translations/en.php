@@ -2,7 +2,7 @@
 
 global $_MODULE;
 $_MODULE = array();
-$_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_a724ec2d2c355db62a5f469c8c2a4974'] = 'Internauten B2B Info';
+$_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_997e7cd3c8f4d8a86a9d755c24f3fdfe'] = 'Internauten B2B Info';
 $_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_ce87ff5397060ac26b59e43540b505f7'] = 'Display custom text on product pages for specific customer groups';
 $_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_bb8956c67b82c7444a80c6b2433dd8b4'] = 'Are you sure you want to uninstall this module?';
 $_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_19636395066a245172dc03e21c861ca4'] = 'Invalid group ID';
@@ -16,4 +16,5 @@ $_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_08b02383dce834815c9
 $_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_9e43df7c6ddc2519bda266ddc1a812fb'] = 'Select the customer group that will see the message';
 $_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_c9cc8cce247e49bae79f15173ce97354'] = 'Save';
 $_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_89850fde9cbf081b89b5cfcc5b940ff0'] = 'Special pricing for your group!';
+$_MODULE['<{internautenb2binfo}prestashop>displayproductpriceblock_3aa0f3cc40b36a33a804075241ab3c56'] = 'This item has no price for resellers. Add the item in the desired quantity to the shopping cart and select Request a Quote as the payment method when ordering.';
 $_MODULE['<{internautenb2binfo}prestashop>displayproductpriceblock_c76f82270692bc0df58ccbee423072cc'] = 'Catalog price:';

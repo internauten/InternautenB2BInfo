@@ -2,7 +2,7 @@
 
 global $_MODULE;
 $_MODULE = array();
-$_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_a724ec2d2c355db62a5f469c8c2a4974'] = 'Internauten B2B Info';
+$_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_997e7cd3c8f4d8a86a9d755c24f3fdfe'] = 'Internauten B2B Info';
 $_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_ce87ff5397060ac26b59e43540b505f7'] = 'Benutzerdefinierten Text auf Produktseiten für bestimmte Kundengruppen anzeigen';
 $_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_bb8956c67b82c7444a80c6b2433dd8b4'] = 'Möchten Sie dieses Modul wirklich deinstallieren?';
 $_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_19636395066a245172dc03e21c861ca4'] = 'Ungültige Gruppen ID';
@@ -16,4 +16,5 @@ $_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_08b02383dce834815c9
 $_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_9e43df7c6ddc2519bda266ddc1a812fb'] = 'Wählen sie die Gruppe welche die Wiederverkäufer gesetzt haben.';
 $_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_c9cc8cce247e49bae79f15173ce97354'] = 'Speichern';
 $_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_89850fde9cbf081b89b5cfcc5b940ff0'] = 'Kein Sonderpreis für Wiederverkäufer verfügbar! Lassen Sie sich eine Offerte geben.';
-$_MODULE['<{internautenb2binfo}prestashop>displayproductpriceblock_c76f82270692bc0df58ccbee423072cc'] = 'Katalogpreis ist:';
+$_MODULE['<{internautenb2binfo}prestashop>displayproductpriceblock_3aa0f3cc40b36a33a804075241ab3c56'] = 'Dieser Artikel hat keinen Preis für Wiederverkäufer. Fügen Sie den Artikel in der gewünschten Menge zum Warenkorb und wählen Sie bei der Bestellung Offerte einholen als Zahlungsmittel.';
+$_MODULE['<{internautenb2binfo}prestashop>displayproductpriceblock_c76f82270692bc0df58ccbee423072cc'] = 'Katalogpreis:';
