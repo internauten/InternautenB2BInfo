@@ -1,5 +1,10 @@
 # PrestaShop Internauten B2B Info Module
 
+[![Sponsor](https://img.shields.io/badge/Sponsor-GitHub-ea4aaa?logo=githubsponsors&style=for-the-badge)](https://github.com/sponsors/internauten)
+[![Stars](https://img.shields.io/github/stars/internauten/InternautenB2BInfo?style=for-the-badge)](https://github.com/internauten/InternautenB2BInfo/stargazers)
+[![Release](https://img.shields.io/github/v/release/internauten/InternautenB2BInfo?style=for-the-badge)](https://github.com/internauten/InternautenB2BInfo/releases)
+[![License](https://img.shields.io/github/license/internauten/InternautenB2BInfo?style=for-the-badge)](LICENSE)
+
 A PrestaShop module that displays custom text on product pages for customers belonging to specific groups.
 
 ## Features
@@ -80,4 +85,6 @@ Notes:
 
 ## License
 
-Academic Free License (AFL 3.0)
+This project is licensed under the MIT License. See details [`LICENSE`](LICENSE).
+
+Copyright (c) 2026 die.internauten.ch GmbH
