@@ -71,12 +71,24 @@ You can create and push a release tag directly from the version in `internautenb
 ./scripts/tag-from-module-version.sh
 ```
 
+On Windows (PowerShell), use one of the following commands:
+
+```powershell
+./scripts/tag-from-module-version.ps1
+# or
+bash ./scripts/tag-from-module-version.sh
+```
+
 The script reads the module version, creates an annotated tag in the format `v<version>`, and pushes it to `origin`.
 
 Use a dry-run to preview the tag command without creating or pushing anything:
 
 ```bash
 ./scripts/tag-from-module-version.sh --dry-run
+```
+
+```powershell
+./scripts/tag-from-module-version.ps1 -DryRun
 ```
 
 ## Get Module and install it
