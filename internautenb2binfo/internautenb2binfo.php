@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Group Price Text Module
+ * Internauten B2B Info Module
  *
- * @author    Your Name
+ * @author    die.internauten.ch
  * @copyright Copyright (c) 2026
- * @license   Academic Free License (AFL 3.0)
+ * @license   MIT License
  */
 
 if (!defined('_PS_VERSION_')) {
@@ -18,7 +18,7 @@ class InternautenB2BInfo extends Module
     {
         $this->name = 'internautenb2binfo';
         $this->tab = 'pricing_promotion';
-        $this->version = '1.0.4';
+        $this->version = '1.0.7';
         $this->author = 'die.internauten.ch';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = [
@@ -36,9 +36,16 @@ class InternautenB2BInfo extends Module
 
     public function install()
     {
+        $defaultMessage = [];
+        $languages = Language::getLanguages(false);
+        foreach ($languages as $language) {
+            $defaultMessage[(int)$language['id_lang']] = $this->l('Special pricing for your group!');
+        }
+
         return parent::install()
             && $this->registerHook('displayProductPriceBlock')
             && Configuration::updateValue('INTERNAUTENB2BINFO_GROUP_ID', 1)
+            && Configuration::updateValue('INTERNAUTENB2BINFO_GROUP_MESSAGE', $defaultMessage, true)
             && Configuration::updateValue('INTERNAUTENB2BINFO_ENABLED', 1);
     }
 
@@ -46,6 +53,7 @@ class InternautenB2BInfo extends Module
     {
         return parent::uninstall()
             && Configuration::deleteByName('INTERNAUTENB2BINFO_GROUP_ID')
+            && Configuration::deleteByName('INTERNAUTENB2BINFO_GROUP_MESSAGE')
             && Configuration::deleteByName('INTERNAUTENB2BINFO_ENABLED');
     }
 
@@ -56,12 +64,39 @@ class InternautenB2BInfo extends Module
         if (Tools::isSubmit('submit' . $this->name)) {
             $groupId = (int)Tools::getValue('INTERNAUTENB2BINFO_GROUP_ID');
             $enabled = (int)Tools::getValue('INTERNAUTENB2BINFO_ENABLED');
+            $defaultLang = (int)Configuration::get('PS_LANG_DEFAULT');
+            $languages = Language::getLanguages(false);
+            $groupMessagesByLang = [];
+
+            foreach ($languages as $language) {
+                $idLang = (int)$language['id_lang'];
+                $groupMessagesByLang[$idLang] = (string)Tools::getValue('INTERNAUTENB2BINFO_GROUP_MESSAGE_' . $idLang, '');
+            }
+
+            // Fallback for setups posting only the base field name.
+            if (isset($groupMessagesByLang[$defaultLang]) && $groupMessagesByLang[$defaultLang] === '') {
+                $baseMessage = Tools::getValue('INTERNAUTENB2BINFO_GROUP_MESSAGE', '');
+                if (is_scalar($baseMessage) && $baseMessage !== '') {
+                    $groupMessagesByLang[$defaultLang] = (string)$baseMessage;
+                }
+            }
 
             if (!$groupId || !Validate::isUnsignedId($groupId)) {
                 $output .= $this->displayError($this->l('Invalid group ID'));
+            } elseif (empty($groupMessagesByLang)) {
+                $output .= $this->displayError($this->l('Invalid group message value'));
             } else {
+                foreach ($groupMessagesByLang as $message) {
+                    if (!Validate::isCleanHtml((string)$message)) {
+                        $output .= $this->displayError($this->l('Invalid group message value'));
+
+                        return $output . $this->displayForm();
+                    }
+                }
+
                 Configuration::updateValue('INTERNAUTENB2BINFO_GROUP_ID', $groupId);
                 Configuration::updateValue('INTERNAUTENB2BINFO_ENABLED', $enabled);
+                Configuration::updateValue('INTERNAUTENB2BINFO_GROUP_MESSAGE', $groupMessagesByLang, true);
                 $output .= $this->displayConfirmation($this->l('Settings updated successfully'));
             }
         }
@@ -73,6 +108,11 @@ class InternautenB2BInfo extends Module
     {
         // Get default language
         $defaultLang = (int)Configuration::get('PS_LANG_DEFAULT');
+        $languages = Language::getLanguages(false);
+        foreach ($languages as &$language) {
+            $language['is_default'] = ((int)$language['id_lang'] === $defaultLang);
+        }
+        unset($language);
 
         // Get all customer groups
         $groups = Group::getGroups($defaultLang);
@@ -121,6 +161,16 @@ class InternautenB2BInfo extends Module
                             'name' => 'name'
                         ],
                         'desc' => $this->l('Select the customer group that will see the message')
+                    ],
+                    [
+                        'type' => 'textarea',
+                        'label' => $this->l('Group message'),
+                        'name' => 'INTERNAUTENB2BINFO_GROUP_MESSAGE',
+                        'lang' => true,
+                        'autoload_rte' => false,
+                        'rows' => 3,
+                        'cols' => 60,
+                        'desc' => $this->l('Message shown for the selected customer group. You can define one text per language.')
                     ]
                 ],
                 'submit' => [
@@ -136,7 +186,8 @@ class InternautenB2BInfo extends Module
         $helper->token = Tools::getAdminTokenLite('AdminModules');
         $helper->currentIndex = AdminController::$currentIndex . '&configure=' . $this->name;
         $helper->default_form_language = $defaultLang;
-        $helper->allow_employee_form_lang = $defaultLang;
+        $helper->allow_employee_form_lang = (int)Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG');
+        $helper->languages = $languages;
         $helper->title = $this->displayName;
         $helper->show_toolbar = true;
         $helper->toolbar_scroll = true;
@@ -144,6 +195,10 @@ class InternautenB2BInfo extends Module
 
         $helper->fields_value['INTERNAUTENB2BINFO_GROUP_ID'] = Configuration::get('INTERNAUTENB2BINFO_GROUP_ID');
         $helper->fields_value['INTERNAUTENB2BINFO_ENABLED'] = Configuration::get('INTERNAUTENB2BINFO_ENABLED');
+        foreach ($languages as $language) {
+            $idLang = (int)$language['id_lang'];
+            $helper->fields_value['INTERNAUTENB2BINFO_GROUP_MESSAGE'][$idLang] = Configuration::get('INTERNAUTENB2BINFO_GROUP_MESSAGE', $idLang);
+        }
 
         return $helper->generateForm([$fieldsForm]);
     }
@@ -154,6 +209,12 @@ class InternautenB2BInfo extends Module
         if (!Configuration::get('INTERNAUTENB2BINFO_ENABLED')) {
             return '';
         }
+
+        if (!isset($params['product']) || !is_object($params['product'])) {
+            return '';
+        }
+
+        $presentedProduct = $params['product'];
 
         // Check if we have the 'after_price' type
         if (isset($params['type']) && $params['type'] !== 'after_price') {
@@ -179,22 +240,22 @@ class InternautenB2BInfo extends Module
         $hasSpecificPrice = false;
 
         // Method 1: Check reduction_type
-        if (isset($params['product']->reduction_type) && !empty($params['product']->reduction_type)) {
+        if (isset($presentedProduct->reduction_type) && !empty($presentedProduct->reduction_type)) {
             $hasSpecificPrice = true;
         }
 
         // Method 2: Check reduction value
-        if (isset($params['product']->reduction) && $params['product']->reduction > 0) {
+        if (isset($presentedProduct->reduction) && $presentedProduct->reduction > 0) {
             $hasSpecificPrice = true;
         }
 
         // Method 3: Check specific_prices array
-        if (isset($params['product']->specific_prices) && !empty($params['product']->specific_prices)) {
+        if (isset($presentedProduct->specific_prices) && !empty($presentedProduct->specific_prices)) {
             $hasSpecificPrice = true;
         }
 
         // Method 4: Check has_discount on product object
-        if (isset($params['product']->product->has_discount) && $params['product']->product->has_discount) {
+        if (isset($presentedProduct->product) && is_object($presentedProduct->product) && !empty($presentedProduct->product->has_discount)) {
             $hasSpecificPrice = true;
         }
 
@@ -203,13 +264,18 @@ class InternautenB2BInfo extends Module
 
         // Do not show text if product has specific price
         if ($hasSpecificPrice) {
-            $productObj = new Product((int)$params['product']->id_product, false, $context->language->id);
-            $taxRate = $productObj->getTaxesRate();
-            $priceIncl = $productObj->price * (1 + ($taxRate / 100));
-            $regularPrice = Tools::displayPrice($priceIncl);
+            // Prefer regular price data already prepared by PrestaShop presenter.
+            if (isset($presentedProduct->regular_price) && is_scalar($presentedProduct->regular_price) && (string)$presentedProduct->regular_price !== '') {
+                $regularPrice = (string)$presentedProduct->regular_price;
+            } elseif (isset($presentedProduct->price_without_reduction) && is_numeric($presentedProduct->price_without_reduction)) {
+                $regularPrice = Tools::displayPrice((float)$presentedProduct->price_without_reduction);
+            }
         } else {
-            // Get the message
-            $message = $this->l('Special pricing for your group!');
+            // Get the language-specific message with fallback to default language.
+            $message = Configuration::get('INTERNAUTENB2BINFO_GROUP_MESSAGE', (int)$context->language->id);
+            if ($message === false || $message === null || $message === '') {
+                $message = Configuration::get('INTERNAUTENB2BINFO_GROUP_MESSAGE', (int)Configuration::get('PS_LANG_DEFAULT'));
+            }
         }
 
         // Assign variables to template
