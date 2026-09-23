@@ -1,34 +1,48 @@
+<!-- Documents the release history and notable module changes for maintainers and merchants. -->
+<!-- Copyright (c) 2026 die.internauten.ch GmbH -->
+<!-- License: MIT -->
+
 # Changelog
 
-## v1.0.2
+All notable changes to this project are documented in this file.
 
-New names
+## [1.0.8] - 2026-09-23
 
-## v1.0.1
+### Added
 
-All Texts to the translation files
+- Added upgrade script [internautenb2binfo/upgrade/upgrade-1.0.8.php](internautenb2binfo/upgrade/upgrade-1.0.8.php) to provide a clear migration step for module updates.
 
-## v1.0.0
+### Changed
 
-PrestaShop Group Price Text Module first version
+- Aligned version metadata across module files to `1.0.8`.
+- Standardized release-history structure for future entries.
 
----
+## [1.0.7] - 2026-09-22
 
-A PrestaShop module that displays custom text on product pages for customers belonging to specific groups.
+### Changed
 
-### Features
+- Improved multilingual configuration handling for group messages.
 
-- Display custom messages on product pages based on customer group membership
-- Displays Text only if there is no reduction for this group
-- Displays the original catalog prise to if there is a reduction
-- Easy configuration via module settings
-- Enable/disable functionality
-- Responsive Bootstrap styling
-- Compatible with PrestaShop 1.7+
+## [1.0.2] - 2026-09-16
 
-See README.md for installation instruction
+### Changed
 
-## v0.1.0
+- Updated naming consistency.
 
-- Initial tagged release.
-- no release build
+## [1.0.1] - 2026-09-16
+
+### Changed
+
+- Moved all user-facing texts to translation files.
+
+## [1.0.0] - 2026-09-16
+
+### Added
+
+- Initial release of the PrestaShop Group Price Text module.
+
+## [0.1.0] - 2026-09-16
+
+### Added
+
+- Initial tagged release without release build.

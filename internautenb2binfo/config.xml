@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<!-- Provides module metadata used by PrestaShop during install and update. -->
+<!-- Copyright (c) 2026 die.internauten.ch GmbH -->
+<!-- License: MIT -->
 <module>
     <name>internautenb2binfo</name>
     <displayName><![CDATA[Internauten B2B Info]]></displayName>
-    <version><![CDATA[1.0.0]]></version>
+    <version><![CDATA[1.0.8]]></version>
     <description><![CDATA[Display custom text on product pages for specific customer groups]]></description>
     <author><![CDATA[die.internauten.ch]]></author>
     <tab><![CDATA[pricing_promotion]]></tab>

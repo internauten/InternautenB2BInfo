@@ -1,3 +1,7 @@
+<!-- Explains module usage, installation, and release workflow for Internauten B2B Info. -->
+<!-- Copyright (c) 2026 die.internauten.ch GmbH -->
+<!-- License: MIT -->
+
 # PrestaShop Internauten B2B Info Module
 
 [![Sponsor](https://img.shields.io/badge/Sponsor-GitHub-ea4aaa?logo=githubsponsors&style=for-the-badge)](https://github.com/sponsors/internauten)
@@ -37,6 +41,8 @@ The module uses the `displayProductPriceBlock` hook to display text after the pr
 
 ## Release via GitHub Actions
 
+For a fast step-by-step release routine, use [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md).
+
 How to create a new release that builds the ZIP and attaches it to the GitHub Release:
 
 1. Ensure `CHANGELOG.md` contains a section for the tag, for example:
@@ -62,6 +68,32 @@ Notes:
 
 - The release text is taken from the matching section in `CHANGELOG.md`.
 - If no section is present, commit messages are used as release notes automatically.
+
+## Version History and Upgrades
+
+For each new release, keep these three artifacts in sync:
+
+1. Update the module version in `internautenb2binfo/internautenb2binfo.php`.
+2. Update the metadata version in `internautenb2binfo/config.xml`.
+3. Add a new section in `CHANGELOG.md` using this format:
+
+   ```md
+   ## [1.0.9] - 2026-09-23
+
+   ### Added
+
+   - ...
+
+   ### Changed
+
+   - ...
+
+   ### Fixed
+
+   - ...
+   ```
+
+If an update changes configuration, schema, or stored values, also create an upgrade script in `internautenb2binfo/upgrade/` named `upgrade-X.Y.Z.php` with the function `upgrade_module_X_Y_Z(...)`.
 
 ### Create and push tag from module version
 
