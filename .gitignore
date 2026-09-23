@@ -42,3 +42,7 @@ var/logs/*
 .env
 .env.local
 *.phar
+
+# Module metadata managed in PHP class/version workflow
+internautenb2binfo/config.xml
+internautenb2binfo/config_de.xml
