@@ -19,7 +19,8 @@ A PrestaShop module that displays custom text on product pages for customers bel
 - Easy configuration via module settings
 - Enable/disable functionality
 - Responsive Bootstrap styling
-- Compatible with PrestaShop 1.7+
+- Translated into German (`de`), English (`en`), French (`fr`) and Italian (`it`)
+- Tested with PrestaShop 9.1.4
 
 ## Installation
 
@@ -32,12 +33,25 @@ A PrestaShop module that displays custom text on product pages for customers bel
 ## Configuration
 
 - **Enable module**: Toggle the module on/off
-- **Customer Group**: Select which customer group will see the message
+- **Reseller group**: Select which customer group will see the message
 - **Message**: Enter the text to display to the selected group
 
 ## How It Works
 
-The module uses the `displayProductPriceBlock` hook to display text after the product price. It checks if the logged-in customer belongs to the configured group and displays the custom message accordingly.
+The module uses the `displayProductPriceBlock` hook (type `after_price`) to render content after the product price.
+
+Output is only rendered when all of the following conditions are met:
+
+- The module is enabled.
+- The visitor is logged in (guests never see any output).
+- The customer's **default group** (`id_default_group`) matches the configured customer group. Additional group memberships are intentionally ignored.
+
+If these conditions are met, the output depends on the product's price:
+
+- **No reduction or specific price for this group:** the configured message is displayed.
+- **Reduction or specific price for this group:** instead of the message, the original selling price is displayed ("Regular price: …"). It is calculated for the default customer group (`PS_CUSTOMER_GROUP`), ignoring group- or customer-specific prices and reductions, and respects the shop's tax display settings.
+
+In all other cases (module disabled, guest, other default group) the module renders nothing.
 
 ## Release via GitHub Actions
 

@@ -6,6 +6,16 @@
 
 All notable changes to this project are documented in this file.
 
+## [1.1.0] - 2026-09-24
+
+### Added
+
+- Added French (`fr`) and Italian (`it`) translations.
+
+### Changed
+
+- Aligned the English translations with the German texts (reseller group label, help text and reseller message).
+
 ## [1.0.9] - 2026-09-24
 
 ### Fixed

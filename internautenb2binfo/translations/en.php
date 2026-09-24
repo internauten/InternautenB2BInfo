@@ -1,4 +1,7 @@
 <?php
+// English translations for the Internauten B2B Info module.
+// Copyright (c) 2026 die.internauten.ch GmbH
+// License: MIT
 
 global $_MODULE;
 $_MODULE = array();
@@ -12,9 +15,9 @@ $_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_7a01a554b2fe1ebe7f0
 $_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_8110eae95ded27f8d4c7dd6ea6e4f5d1'] = 'Enable or disable the module';
 $_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Enabled';
 $_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_b9f5c797ebbf55adccdd8539a65a0241'] = 'Disabled';
-$_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_08b02383dce834815c99539f02f0fd89'] = 'Customer Group';
-$_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_9e43df7c6ddc2519bda266ddc1a812fb'] = 'Select the customer group that will see the message';
+$_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_08b02383dce834815c99539f02f0fd89'] = 'Reseller group';
+$_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_9e43df7c6ddc2519bda266ddc1a812fb'] = 'Select the group assigned to resellers.';
 $_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_c9cc8cce247e49bae79f15173ce97354'] = 'Save';
-$_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_89850fde9cbf081b89b5cfcc5b940ff0'] = 'Special pricing for your group!';
-$_MODULE['<{internautenb2binfo}prestashop>displayproductpriceblock_3aa0f3cc40b36a33a804075241ab3c56'] = 'This item has no price for resellers. Add the item in the desired quantity to the shopping cart and select Request a Quote as the payment method when ordering.';
+$_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_89850fde9cbf081b89b5cfcc5b940ff0'] = 'No special price available for resellers! Request a quote.';
+$_MODULE['<{internautenb2binfo}prestashop>displayproductpriceblock_3aa0f3cc40b36a33a804075241ab3c56'] = 'This item has no price for resellers. Add the item in the desired quantity to the shopping cart and select "Request a quote" as the payment method when ordering.';
 $_MODULE['<{internautenb2binfo}prestashop>displayproductpriceblock_e545bb74dcb36c1382aee29f7b829659'] = 'Regular price:';
