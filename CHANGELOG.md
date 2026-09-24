@@ -6,6 +6,17 @@
 
 All notable changes to this project are documented in this file.
 
+## [1.0.9] - 2026-09-24
+
+### Fixed
+
+- The price block now shows the original selling price (default customer group, without group-specific prices or reductions) instead of the group's special price.
+- Removed leftover debug output from the price block template.
+
+### Changed
+
+- Renamed the price label from "Catalog price" to "Regular price".
+
 ## [1.0.8] - 2026-09-23
 
 ### Added

@@ -3,6 +3,9 @@
 /**
  * Internauten B2B Info Module
  *
+ * Displays a group message or the original selling price in the product
+ * price block for a configured B2B customer group.
+ *
  * @author    die.internauten.ch
  * @copyright Copyright (c) 2026
  * @license   MIT License
@@ -18,7 +21,7 @@ class InternautenB2BInfo extends Module
     {
         $this->name = 'internautenb2binfo';
         $this->tab = 'pricing_promotion';
-        $this->version = '1.0.8';
+        $this->version = '1.0.9';
         $this->author = 'die.internauten.ch';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = [
@@ -264,12 +267,8 @@ class InternautenB2BInfo extends Module
 
         // Do not show text if product has specific price
         if ($hasSpecificPrice) {
-            // Prefer regular price data already prepared by PrestaShop presenter.
-            if (isset($presentedProduct->regular_price) && is_scalar($presentedProduct->regular_price) && (string)$presentedProduct->regular_price !== '') {
-                $regularPrice = (string)$presentedProduct->regular_price;
-            } elseif (isset($presentedProduct->price_without_reduction) && is_numeric($presentedProduct->price_without_reduction)) {
-                $regularPrice = Tools::displayPrice((float)$presentedProduct->price_without_reduction);
-            }
+            // The presenter's regular_price still contains fixed group prices, so compute it without the group.
+            $regularPrice = $this->getOriginalSellingPrice($presentedProduct, $context);
         } else {
             // Get the language-specific message with fallback to default language.
             $message = Configuration::get('INTERNAUTENB2BINFO_GROUP_MESSAGE', (int)$context->language->id);
@@ -282,9 +281,65 @@ class InternautenB2BInfo extends Module
         $this->context->smarty->assign([
             'group_message' => $message,
             'regular_price' => $regularPrice,
-            'debug_info' => null,
         ]);
 
         return $this->display(__FILE__, 'views/templates/hook/displayproductpriceblock.tpl');
+    }
+
+    /**
+     * Calculates the selling price for the default customer group, ignoring
+     * group/customer specific prices and reductions of the current customer.
+     */
+    private function getOriginalSellingPrice(object $presentedProduct, Context $context): ?string
+    {
+        $idProduct = isset($presentedProduct->id_product) ? (int)$presentedProduct->id_product : 0;
+        if ($idProduct <= 0) {
+            return null;
+        }
+
+        $idProductAttribute = isset($presentedProduct->id_product_attribute) ? (int)$presentedProduct->id_product_attribute : 0;
+        $idDefaultCustomerGroup = (int)Configuration::get('PS_CUSTOMER_GROUP');
+        $idCurrency = Validate::isLoadedObject($context->currency) ? (int)$context->currency->id : (int)Currency::getDefaultCurrencyId();
+
+        $idAddress = null;
+        if (Validate::isLoadedObject($context->cart)) {
+            $idAddress = (int)$context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+        }
+        $address = Address::initialize($idAddress, true);
+
+        $useTax = (bool)Configuration::get('PS_TAX')
+            && Product::getTaxCalculationMethod((int)$context->customer->id) === PS_TAX_INC;
+
+        $specificPriceOutput = null;
+        $price = Product::priceCalculation(
+            (int)$context->shop->id,
+            $idProduct,
+            $idProductAttribute,
+            (int)$address->id_country,
+            (int)$address->id_state,
+            (string)$address->postcode,
+            $idCurrency,
+            $idDefaultCustomerGroup,
+            1,
+            $useTax,
+            6,
+            false,
+            false,
+            true,
+            $specificPriceOutput,
+            false,
+            0
+        );
+
+        if (!is_numeric($price)) {
+            return null;
+        }
+
+        $locale = $context->getCurrentLocale();
+        if ($locale === null || !Validate::isLoadedObject($context->currency)) {
+            return null;
+        }
+
+        return $locale->formatPrice((float)$price, $context->currency->iso_code);
     }
 }

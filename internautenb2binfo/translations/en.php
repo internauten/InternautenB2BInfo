@@ -17,4 +17,4 @@ $_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_9e43df7c6ddc2519bda
 $_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_c9cc8cce247e49bae79f15173ce97354'] = 'Save';
 $_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_89850fde9cbf081b89b5cfcc5b940ff0'] = 'Special pricing for your group!';
 $_MODULE['<{internautenb2binfo}prestashop>displayproductpriceblock_3aa0f3cc40b36a33a804075241ab3c56'] = 'This item has no price for resellers. Add the item in the desired quantity to the shopping cart and select Request a Quote as the payment method when ordering.';
-$_MODULE['<{internautenb2binfo}prestashop>displayproductpriceblock_c76f82270692bc0df58ccbee423072cc'] = 'Catalog price:';
+$_MODULE['<{internautenb2binfo}prestashop>displayproductpriceblock_e545bb74dcb36c1382aee29f7b829659'] = 'Regular price:';
