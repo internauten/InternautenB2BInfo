@@ -49,7 +49,7 @@ Output is only rendered when all of the following conditions are met:
 If these conditions are met, the output depends on the product's price:
 
 - **No reduction or specific price for this group:** the configured message is displayed.
-- **Reduction or specific price for this group:** instead of the message, the original selling price is displayed ("Regular price: …"). It is calculated for the default customer group (`PS_CUSTOMER_GROUP`), ignoring group- or customer-specific prices and reductions, and respects the shop's tax display settings.
+- **Reduction or specific price for this group:** instead of the message, the original selling price is displayed ("Regular price: …"). It is calculated for the default customer group (`PS_CUSTOMER_GROUP`), ignoring group- or customer-specific prices and reductions, and is always shown including VAT (if taxes are enabled in the shop).
 
 In all other cases (module disabled, guest, other default group) the module renders nothing.
 

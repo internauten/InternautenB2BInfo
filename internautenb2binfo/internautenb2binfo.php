@@ -21,7 +21,7 @@ class InternautenB2BInfo extends Module
     {
         $this->name = 'internautenb2binfo';
         $this->tab = 'pricing_promotion';
-        $this->version = '1.1.0';
+        $this->version = '1.1.1';
         $this->author = 'die.internauten.ch';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = [
@@ -307,8 +307,8 @@ class InternautenB2BInfo extends Module
         }
         $address = Address::initialize($idAddress, true);
 
-        $useTax = (bool)Configuration::get('PS_TAX')
-            && Product::getTaxCalculationMethod((int)$context->customer->id) === PS_TAX_INC;
+        // Always show the regular price incl. VAT, regardless of the group's tax display setting.
+        $useTax = (bool)Configuration::get('PS_TAX');
 
         $specificPriceOutput = null;
         $price = Product::priceCalculation(

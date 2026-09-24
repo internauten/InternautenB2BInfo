@@ -6,6 +6,12 @@
 
 All notable changes to this project are documented in this file.
 
+## [1.1.1] - 2026-09-24
+
+### Changed
+
+- The regular price is now always displayed including VAT, independent of the customer group's tax display setting.
+
 ## [1.1.0] - 2026-09-24
 
 ### Added
