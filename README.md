@@ -50,6 +50,7 @@ If these conditions are met, the output depends on the product's price:
 
 - **No reduction or specific price for this group:** the configured message is displayed.
 - **Reduction or specific price for this group:** instead of the message, the original selling price is displayed ("RRP (incl. VAT): …"). It is calculated for the default customer group (`PS_CUSTOMER_GROUP`), ignoring group- or customer-specific prices and reductions, and is always shown including VAT (if taxes are enabled in the shop).
+  Below it, the customer's margin is displayed ("Your margin: …"): the net RRP minus the net price the customer actually pays (including group reductions and specific prices). Both prices are excl. VAT, because resellers can reclaim input VAT and owe output VAT on resale. The margin is hidden if it is zero or negative.
 
 In all other cases (module disabled, guest, other default group) the module renders nothing.
 

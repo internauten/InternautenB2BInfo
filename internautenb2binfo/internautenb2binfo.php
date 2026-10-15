@@ -3,11 +3,11 @@
 /**
  * Internauten B2B Info Module
  *
- * Displays a group message or the original selling price in the product
- * price block for a configured B2B customer group.
+ * Displays a group message or the original selling price and the customer's
+ * margin in the product price block for a configured B2B customer group.
  *
  * @author    die.internauten.ch
- * @copyright Copyright (c) 2026
+ * @copyright Copyright (c) 2026 die.internauten.ch GmbH
  * @license   MIT License
  */
 
@@ -21,7 +21,7 @@ class InternautenB2BInfo extends Module
     {
         $this->name = 'internautenb2binfo';
         $this->tab = 'pricing_promotion';
-        $this->version = '1.1.2';
+        $this->version = '1.2.0';
         $this->author = 'die.internauten.ch';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = [
@@ -263,12 +263,33 @@ class InternautenB2BInfo extends Module
         }
 
         $regularPrice = null;
+        $priceDiff = null;
         $message = null;
 
         // Do not show text if product has specific price
         if ($hasSpecificPrice) {
             // The presenter's regular_price still contains fixed group prices, so compute it without the group.
-            $regularPrice = $this->getOriginalSellingPrice($presentedProduct, $context);
+            $idDefaultGroup = (int)Configuration::get('PS_CUSTOMER_GROUP');
+            $idCustomerGroup = (int)$context->customer->id_default_group;
+            $idCustomer = (int)$context->customer->id;
+
+            // Always show the regular price incl. VAT, regardless of the group's tax display setting.
+            $regularGross = $this->calculatePrice($presentedProduct, $context, $idDefaultGroup, 0, false, true);
+
+            // Resellers can reclaim input VAT, so the margin is based on net prices.
+            $regularNet = $this->calculatePrice($presentedProduct, $context, $idDefaultGroup, 0, false, false);
+            $customerNet = $this->calculatePrice($presentedProduct, $context, $idCustomerGroup, $idCustomer, true, false);
+
+            if ($regularGross !== null) {
+                $regularPrice = $this->formatPrice($regularGross, $context);
+
+                if ($regularNet !== null && $customerNet !== null) {
+                    $difference = Tools::ps_round($regularNet - $customerNet, $context->getComputingPrecision());
+                    if ($difference > 0) {
+                        $priceDiff = $this->formatPrice($difference, $context);
+                    }
+                }
+            }
         } else {
             // Get the language-specific message with fallback to default language.
             $message = Configuration::get('INTERNAUTENB2BINFO_GROUP_MESSAGE', (int)$context->language->id);
@@ -281,24 +302,30 @@ class InternautenB2BInfo extends Module
         $this->context->smarty->assign([
             'group_message' => $message,
             'regular_price' => $regularPrice,
+            'price_diff' => $priceDiff,
         ]);
 
         return $this->display(__FILE__, 'views/templates/hook/displayproductpriceblock.tpl');
     }
 
     /**
-     * Calculates the selling price for the default customer group, ignoring
-     * group/customer specific prices and reductions of the current customer.
+     * Calculates the unit price for the given group. Without reductions it returns
+     * the regular selling price, with reductions the price the customer pays.
      */
-    private function getOriginalSellingPrice(object $presentedProduct, Context $context): ?string
-    {
+    private function calculatePrice(
+        object $presentedProduct,
+        Context $context,
+        int $idGroup,
+        int $idCustomer,
+        bool $useReductions,
+        bool $withTax
+    ): ?float {
         $idProduct = isset($presentedProduct->id_product) ? (int)$presentedProduct->id_product : 0;
         if ($idProduct <= 0) {
             return null;
         }
 
         $idProductAttribute = isset($presentedProduct->id_product_attribute) ? (int)$presentedProduct->id_product_attribute : 0;
-        $idDefaultCustomerGroup = (int)Configuration::get('PS_CUSTOMER_GROUP');
         $idCurrency = Validate::isLoadedObject($context->currency) ? (int)$context->currency->id : (int)Currency::getDefaultCurrencyId();
 
         $idAddress = null;
@@ -307,8 +334,7 @@ class InternautenB2BInfo extends Module
         }
         $address = Address::initialize($idAddress, true);
 
-        // Always show the regular price incl. VAT, regardless of the group's tax display setting.
-        $useTax = (bool)Configuration::get('PS_TAX');
+        $useTax = $withTax && (bool)Configuration::get('PS_TAX');
 
         $specificPriceOutput = null;
         $price = Product::priceCalculation(
@@ -319,27 +345,28 @@ class InternautenB2BInfo extends Module
             (int)$address->id_state,
             (string)$address->postcode,
             $idCurrency,
-            $idDefaultCustomerGroup,
+            $idGroup,
             1,
             $useTax,
             6,
             false,
-            false,
+            $useReductions,
             true,
             $specificPriceOutput,
-            false,
-            0
+            $useReductions,
+            $idCustomer
         );
 
-        if (!is_numeric($price)) {
-            return null;
-        }
+        return is_numeric($price) ? (float)$price : null;
+    }
 
+    private function formatPrice(float $amount, Context $context): ?string
+    {
         $locale = $context->getCurrentLocale();
         if ($locale === null || !Validate::isLoadedObject($context->currency)) {
             return null;
         }
 
-        return $locale->formatPrice((float)$price, $context->currency->iso_code);
+        return $locale->formatPrice($amount, $context->currency->iso_code);
     }
 }

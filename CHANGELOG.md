@@ -6,11 +6,17 @@
 
 All notable changes to this project are documented in this file.
 
+## [1.2.0] - 2026-10-15
+
+### Added
+
+- Below the RRP, the customer's margin (net RRP minus the customer's own net price, excl. VAT) is shown as "Your margin:". It is hidden if the difference is zero or negative.
+
 ## [1.1.2] - 2026-10-15
 
 ### Changed
 
-- Renamed the regular price label to "RRP (incl. VAT):" (de: "UVP (incl.):", fr: "Prix conseillé (TTC) :", it: "Prezzo consigliato (IVA incl.):").
+- Renamed the regular price label to "RRP (incl. VAT):" (de: "UVP (inkl. MwSt.):", fr: "Prix conseillé (TTC) :", it: "Prezzo consigliato (IVA incl.):").
 
 ### Security
 

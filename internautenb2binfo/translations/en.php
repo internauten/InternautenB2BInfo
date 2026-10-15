@@ -21,3 +21,4 @@ $_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_c9cc8cce247e49bae79
 $_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_89850fde9cbf081b89b5cfcc5b940ff0'] = 'No special price available for resellers! Request a quote.';
 $_MODULE['<{internautenb2binfo}prestashop>displayproductpriceblock_3aa0f3cc40b36a33a804075241ab3c56'] = 'This item has no price for resellers. Add the item in the desired quantity to the shopping cart and select "Request a quote" as the payment method when ordering.';
 $_MODULE['<{internautenb2binfo}prestashop>displayproductpriceblock_e545bb74dcb36c1382aee29f7b829659'] = 'RRP (incl. VAT):';
+$_MODULE['<{internautenb2binfo}prestashop>displayproductpriceblock_2852dcec6cdb4082efa4003f8e1497c8'] = 'Your margin:';

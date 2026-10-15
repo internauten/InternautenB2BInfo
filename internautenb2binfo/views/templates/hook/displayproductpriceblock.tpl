@@ -1,5 +1,5 @@
 {*
- * Renders the group message or the original selling price in the product price block.
+ * Renders the group message or the original selling price and margin in the product price block.
  * Copyright (c) 2026 die.internauten.ch GmbH
  * License: MIT
  *}
@@ -13,4 +13,8 @@
 {if isset($regular_price) && $regular_price}
     <br>
     <strong>{l s='Regular price:' mod='internautenb2binfo'} {$regular_price}</strong>
+    {if isset($price_diff) && $price_diff}
+        <br>
+        <span>{l s='Your margin:' mod='internautenb2binfo'} {$price_diff}</span>
+    {/if}
 {/if}
