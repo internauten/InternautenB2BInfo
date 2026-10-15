@@ -43,6 +43,10 @@ var/logs/*
 .env.local
 *.phar
 
+# Local agent instructions (may contain credentials)
+AGENTS.local.md
+CLAUDE.local.md
+
 # Module metadata managed in PHP class/version workflow
 internautenb2binfo/config.xml
 internautenb2binfo/config_de.xml

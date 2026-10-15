@@ -1,14 +1,27 @@
+<!--
+Instructions for GitHub Copilot (chat, coding agent, code review) working in this repository.
+Copyright (c) 2026 die.internauten.ch GmbH
+License: MIT
+-->
+
 # Copilot Instructions for InternautenB2BInfo
 
-These instructions guide GitHub Copilot when working in this repository. They help keep changes consistent with our project standards, architecture, and delivery workflow.
+This file contains an identical copy of the rules in `AGENTS.md` at the repository root.
+When changing any rule, update both files in the same commit.
 
 ## Project context
 
-- This is a PrestaShop module with the module folder `InternautenB2BInfo`.
+- PrestaShop module. The module folder is `internautenb2binfo/` (lowercase); the main class file is `internautenb2binfo/internautenb2binfo.php`.
+- The module shows a configurable, per-language message (or the regular price) in the product price block for a selected customer group (hook `displayProductPriceBlock`).
 - Target platforms:
   - PrestaShop >= 9.1.4
   - PHP >= 8.3.31
 - This repository also serves as a reference example for AI-assisted development.
+
+## Language
+
+- Chat answers, explanations, and suggestions: **German**.
+- Code, code comments, commit messages, and all Markdown files (including README files): **English**.
 
 ## Working principles
 
@@ -16,20 +29,23 @@ These instructions guide GitHub Copilot when working in this repository. They he
 - Do not change business logic without clear justification in the PR description or commit message.
 - Maintain backward compatibility unless a breaking change is explicitly required.
 - Avoid destructive bulk changes such as sweeping formatting updates without a clear benefit.
+- When requirements are unclear, state your assumptions before proceeding.
+- For changes touching more than 3 files or altering module behavior, first present a short step-by-step plan and wait for confirmation before implementing.
 
 ## Coding standards
 
 - Use `declare(strict_types=1);` in all new PHP files.
 - Use clear naming and keep each class or function focused on a single responsibility.
-- Prefer explicit types for parameters, return values, and properties where appropriate.
+- Prefer explicit types for parameters, return values, and properties.
 - Keep functions short and easy to test.
-- Every new or modified file should include a brief but meaningful file header describing its purpose.
-- File-header placement: in PHP files, place it directly below `declare(strict_types=1);`; in other file types, place it at the top of the file.
-- The file header should also include a copyright notice for die.internauten.ch GmbH and a brief reference to the MIT license.
 - Only add inline comments where the logic would otherwise be difficult to follow.
-- Documentation comments and text in Markdown files, including README files, should always be written in English.
 
-Example of a concise, meaningful PHP file header:
+### File headers
+
+Every new or modified file must include a brief file header describing its purpose, a copyright notice for die.internauten.ch GmbH, and a reference to the MIT license.
+
+- PHP files: directly below `declare(strict_types=1);`
+- Other file types: at the top of the file, using the file type's comment syntax (e.g. `{* ... *}` in Smarty `.tpl`, `<!-- ... -->` in HTML/Markdown).
 
 ```php
 // Provides the API endpoints for synchronizing external stock levels.
@@ -39,37 +55,56 @@ Example of a concise, meaningful PHP file header:
 
 ## PrestaShop module-specific guidance
 
-- Keep the structure of the `InternautenB2BInfo` module folder consistent.
+- Keep the structure of the `internautenb2binfo/` folder consistent (`views/templates/hook`, `translations`, `upgrade`).
+- Every directory inside the module must contain the standard PrestaShop `index.php` guard file.
 - Only change hook names, service IDs, configuration keys, and database structures when there is a clear migration strategy.
-- Be aware that the module is loaded locally into the PrestaShop environment from `WoWGetPrestaLocal`.
-- For validation against the PrestaShop core, the relevant PrestaShop PHP code is located relative to this repository under `../WoWGetPrestaLocal/html`.
-- If PrestaShop implementations are needed for analysis, comparison, or compatibility checks, this path should be treated as the primary reference.
-- Any user-facing text shown in the back office or on the front end must always go through the translation files instead of being hardcoded in PHP, templates or other source files.
-- Keep the locale files aligned whenever new strings or behavior are introduced. The supported languages for this module are: `de` = German (Switzerland), `en` = English, `fr` = French, and `it` = Italian.
-- Update all relevant translation files together so the same feature is available in each supported locale.
-- In the German translation file, use proper German umlauts such as `ä`, `ö`, `ü`, and `ß` instead of ASCII substitutes.
+- Database or configuration changes require an upgrade script `internautenb2binfo/upgrade/upgrade-X.Y.Z.php` matching the new module version.
+- The module is loaded locally into the PrestaShop environment from `WoWGetPrestaLocal`.
+- The PrestaShop core reference code is at `../WoWGetPrestaLocal/html` (relative to this repository). Use it as the primary reference for analysis, comparison, and compatibility checks.
+
+### Translations
+
+- Never hardcode user-facing text (back office or front end) in PHP, templates, or other source files.
+- This module uses the **legacy module translation system**:
+  - PHP: `$this->l('...')` in the module class
+  - Smarty: `{l s='...' mod='internautenb2binfo'}`
+  - Translation files: `internautenb2binfo/translations/{en,de,fr,it}.php`
+- Do not switch to the Symfony `trans()` / translation domain system unless explicitly requested.
+- Keep `en`, `de` (German, Switzerland), `fr`, and `it` aligned whenever strings are added or changed.
+- In German texts use proper umlauts (`ä`, `ö`, `ü`, `ß`), never ASCII substitutes.
+
+## Local development environment
+
+- Docker Compose project: `../WoWGetPrestaLocal/docker-compose.yml`. Run `docker compose` commands from `../WoWGetPrestaLocal`.
+- Services / containers: `db` (`wow-presta-db`, MariaDB), `php` (`wow-presta-php`, PHP-FPM), `nginx` (`wow-presta-nginx`).
+- Front office: `http://localhost:8081`. The back office URL, DB credentials, and DB name are in `AGENTS.local.md` (not committed); read it when needed.
+- The `internautenb2binfo/` folder is mounted into the shop via Docker volume at `modules/internautenb2binfo`, so file changes are live without copying.
+- Clear the cache after template, hook, or config changes: `docker compose exec php sh -c 'rm -rf var/cache/prod var/cache/dev'`
+- Logs: `../WoWGetPrestaLocal/html/var/logs/`
+- DB table prefix: `ps_` (use `_DB_PREFIX_` in code, never a hardcoded prefix).
+- Never write credentials or the back office folder name into committed files.
+
+## Versioning and documentation
+
+- The module version is defined in `internautenb2binfo/internautenb2binfo.php` as `$this->version = 'X.Y.Z';`. Keep this exact format; the release script parses it.
+- Increment the version (semantic versioning) for every user-visible change, fix, or feature. New features trigger a minor bump (e.g. `1.1.1` -> `1.2.0`), fixes a patch bump.
+- Add a matching section `## [X.Y.Z] - YYYY-MM-DD` to `CHANGELOG.md`. The release workflow extracts the release notes from this heading format.
+- Update `README.md` when functionality or behavior changes.
+- Follow `RELEASE_CHECKLIST.md` when preparing a release.
 
 ## Quality assurance
 
-- When adding or changing functionality, update the module documentation in `README.md` so new features and behavior are reflected there.
-- Keep the module version current whenever a user-visible change, fix, or feature addition is made.
-- If a change affects the module behavior, the version should be reviewed and incremented according to the project release convention (`vX.Y.Z`).
-- Treat version updates as part of the change when shipping a new feature, fix, or user-facing improvement.
-- New features should normally trigger a minor bump in the version, for example `2.6.0` -> `2.7.0` for a meaningful added capability such as AI-generated brand images.
+- Add or update suitable tests when changing code. If no automated tests exist, document concrete manual test steps in the PR or final answer.
+- Before finishing, check PHP syntax of changed files:
 
-- When changing code, add the most suitable tests or update existing ones.
-- If no automated tests are available, document concrete manual test steps.
-- Error messages should be clear and useful to developers and must not expose sensitive data.
+  ```bash
+  find internautenb2binfo -name '*.php' -print0 | xargs -0 -n1 php -l
+  ```
+
+- Error messages must be clear and useful to developers and must not expose sensitive data.
 
 ## Release conventions
 
 - Release tags follow the pattern `vX.Y.Z`.
-- Tag creation is done through the script in the `scripts` folder (see README).
-- Code changes must not unintentionally break the GitHub Action responsible for releases.
-
-## Copilot behavior in this repository
-
-- Explanations and suggestions should preferably be in German.
-- When requirements are unclear, state the assumptions being made before proceeding.
-- For larger changes, propose a brief step-by-step plan first, then implement it.
-- Keep responses aligned with the repository’s architecture, naming conventions, and module-specific constraints.
+- Tags are created with `scripts/tag-from-module-version.sh` (or `scripts/tag-from-module-version.ps1`; the shell script supports `--dry-run`), which reads the version from the module file.
+- `.github/workflows/zip-internautenb2binfo.yml` zips the `internautenb2binfo/` folder and, on tag push, creates a GitHub release with notes from `CHANGELOG.md`. Do not rename or move that folder, and do not break the version line format or the changelog heading format.

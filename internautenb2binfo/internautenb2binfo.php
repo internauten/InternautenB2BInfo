@@ -21,7 +21,7 @@ class InternautenB2BInfo extends Module
     {
         $this->name = 'internautenb2binfo';
         $this->tab = 'pricing_promotion';
-        $this->version = '1.1.1';
+        $this->version = '1.1.2';
         $this->author = 'die.internauten.ch';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = [
