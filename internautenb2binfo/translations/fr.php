@@ -20,4 +20,4 @@ $_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_9e43df7c6ddc2519bda
 $_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_c9cc8cce247e49bae79f15173ce97354'] = 'Enregistrer';
 $_MODULE['<{internautenb2binfo}prestashop>internautenb2binfo_89850fde9cbf081b89b5cfcc5b940ff0'] = 'Aucun prix spécial disponible pour les revendeurs ! Demandez une offre.';
 $_MODULE['<{internautenb2binfo}prestashop>displayproductpriceblock_3aa0f3cc40b36a33a804075241ab3c56'] = 'Cet article n\'a pas de prix pour les revendeurs. Ajoutez l\'article dans la quantité souhaitée au panier et choisissez « Demander une offre » comme moyen de paiement lors de la commande.';
-$_MODULE['<{internautenb2binfo}prestashop>displayproductpriceblock_e545bb74dcb36c1382aee29f7b829659'] = 'Prix d\'origine :';
+$_MODULE['<{internautenb2binfo}prestashop>displayproductpriceblock_e545bb74dcb36c1382aee29f7b829659'] = 'Prix conseillé (TTC) :';

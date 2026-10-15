@@ -8,6 +8,10 @@ All notable changes to this project are documented in this file.
 
 ## [1.1.2] - 2026-10-15
 
+### Changed
+
+- Renamed the regular price label to "RRP (incl. VAT):" (de: "UVP (incl.):", fr: "Prix conseillé (TTC) :", it: "Prezzo consigliato (IVA incl.):").
+
 ### Security
 
 - Added the standard PrestaShop `index.php` guard file to every module directory to prevent directory listing.
