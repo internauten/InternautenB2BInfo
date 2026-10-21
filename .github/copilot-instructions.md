@@ -7,7 +7,7 @@ License: MIT
 # Copilot Instructions for InternautenB2BInfo
 
 This file contains an identical copy of the rules in `AGENTS.md` at the repository root.
-When changing any rule, update both files in the same commit.
+When changing any rule, update both files in the same commit and run `scripts/check-instructions-sync.sh` (it fails if the rule sections differ).
 
 ## Project context
 
@@ -32,6 +32,12 @@ When changing any rule, update both files in the same commit.
 - When requirements are unclear, state your assumptions before proceeding.
 - For changes touching more than 3 files or altering module behavior, first present a short step-by-step plan and wait for confirmation before implementing.
 
+## Boundaries
+
+- Do not run `git commit`, `git push`, or create tags unless explicitly asked.
+- Treat `../WoWGetPrestaLocal/html` (PrestaShop core) as read-only reference; never edit it.
+- Never modify `AGENTS.local.md` content in committed files or copy its values elsewhere.
+
 ## Coding standards
 
 - Use `declare(strict_types=1);` in all new PHP files.
@@ -42,13 +48,14 @@ When changing any rule, update both files in the same commit.
 
 ### File headers
 
-Every new or modified file must include a brief file header describing its purpose, a copyright notice for die.internauten.ch GmbH, and a reference to the MIT license.
+Every new file must include a brief file header describing its purpose, a copyright notice for die.internauten.ch GmbH, and a reference to the MIT license.
+Do not add headers to existing files only because you modified them. Exempt: the `index.php` guard files, `logo.png`, and generated or data files (e.g. JSON, XML).
 
 - PHP files: directly below `declare(strict_types=1);`
 - Other file types: at the top of the file, using the file type's comment syntax (e.g. `{* ... *}` in Smarty `.tpl`, `<!-- ... -->` in HTML/Markdown).
 
 ```php
-// Provides the API endpoints for synchronizing external stock levels.
+// Renders the B2B price info message in the product price block.
 // Copyright (c) 2026 die.internauten.ch GmbH
 // License: MIT
 ```
@@ -59,6 +66,7 @@ Every new or modified file must include a brief file header describing its purpo
 - Every directory inside the module must contain the standard PrestaShop `index.php` guard file.
 - Only change hook names, service IDs, configuration keys, and database structures when there is a clear migration strategy.
 - Database or configuration changes require an upgrade script `internautenb2binfo/upgrade/upgrade-X.Y.Z.php` matching the new module version.
+  Not every version bump needs one: purely functional or textual changes without database or configuration impact may skip it, so the latest upgrade script can be older than the current module version.
 - The module is loaded locally into the PrestaShop environment from `WoWGetPrestaLocal`.
 - The PrestaShop core reference code is at `../WoWGetPrestaLocal/html` (relative to this repository). Use it as the primary reference for analysis, comparison, and compatibility checks.
 
@@ -101,6 +109,7 @@ Every new or modified file must include a brief file header describing its purpo
   find internautenb2binfo -name '*.php' -print0 | xargs -0 -n1 php -l
   ```
 
+- After a behavior change, verify it in the local shop: open a product page as a customer of the configured group and as one outside it, in each active language.
 - Error messages must be clear and useful to developers and must not expose sensitive data.
 
 ## Release conventions
