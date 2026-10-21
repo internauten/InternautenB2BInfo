@@ -50,3 +50,5 @@ CLAUDE.local.md
 # Module metadata managed in PHP class/version workflow
 internautenb2binfo/config.xml
 internautenb2binfo/config_de.xml
+# PrestaShop-generated module config files
+config*.xml
