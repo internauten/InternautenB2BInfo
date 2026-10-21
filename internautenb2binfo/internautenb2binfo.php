@@ -21,7 +21,7 @@ class InternautenB2BInfo extends Module
     {
         $this->name = 'internautenb2binfo';
         $this->tab = 'pricing_promotion';
-        $this->version = '1.2.0';
+        $this->version = '1.3.0';
         $this->author = 'die.internauten.ch';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = [
@@ -42,7 +42,7 @@ class InternautenB2BInfo extends Module
         $defaultMessage = [];
         $languages = Language::getLanguages(false);
         foreach ($languages as $language) {
-            $defaultMessage[(int)$language['id_lang']] = $this->l('Special pricing for your group!');
+            $defaultMessage[(int) $language['id_lang']] = $this->l('Special pricing for your group!');
         }
 
         return parent::install()
@@ -65,22 +65,22 @@ class InternautenB2BInfo extends Module
         $output = '';
 
         if (Tools::isSubmit('submit' . $this->name)) {
-            $groupId = (int)Tools::getValue('INTERNAUTENB2BINFO_GROUP_ID');
-            $enabled = (int)Tools::getValue('INTERNAUTENB2BINFO_ENABLED');
-            $defaultLang = (int)Configuration::get('PS_LANG_DEFAULT');
+            $groupId = (int) Tools::getValue('INTERNAUTENB2BINFO_GROUP_ID');
+            $enabled = (int) Tools::getValue('INTERNAUTENB2BINFO_ENABLED');
+            $defaultLang = (int) Configuration::get('PS_LANG_DEFAULT');
             $languages = Language::getLanguages(false);
             $groupMessagesByLang = [];
 
             foreach ($languages as $language) {
-                $idLang = (int)$language['id_lang'];
-                $groupMessagesByLang[$idLang] = (string)Tools::getValue('INTERNAUTENB2BINFO_GROUP_MESSAGE_' . $idLang, '');
+                $idLang = (int) $language['id_lang'];
+                $groupMessagesByLang[$idLang] = (string) Tools::getValue('INTERNAUTENB2BINFO_GROUP_MESSAGE_' . $idLang, '');
             }
 
             // Fallback for setups posting only the base field name.
             if (isset($groupMessagesByLang[$defaultLang]) && $groupMessagesByLang[$defaultLang] === '') {
                 $baseMessage = Tools::getValue('INTERNAUTENB2BINFO_GROUP_MESSAGE', '');
                 if (is_scalar($baseMessage) && $baseMessage !== '') {
-                    $groupMessagesByLang[$defaultLang] = (string)$baseMessage;
+                    $groupMessagesByLang[$defaultLang] = (string) $baseMessage;
                 }
             }
 
@@ -90,7 +90,7 @@ class InternautenB2BInfo extends Module
                 $output .= $this->displayError($this->l('Invalid group message value'));
             } else {
                 foreach ($groupMessagesByLang as $message) {
-                    if (!Validate::isCleanHtml((string)$message)) {
+                    if (!Validate::isCleanHtml((string) $message)) {
                         $output .= $this->displayError($this->l('Invalid group message value'));
 
                         return $output . $this->displayForm();
@@ -110,10 +110,10 @@ class InternautenB2BInfo extends Module
     public function displayForm()
     {
         // Get default language
-        $defaultLang = (int)Configuration::get('PS_LANG_DEFAULT');
+        $defaultLang = (int) Configuration::get('PS_LANG_DEFAULT');
         $languages = Language::getLanguages(false);
         foreach ($languages as &$language) {
-            $language['is_default'] = ((int)$language['id_lang'] === $defaultLang);
+            $language['is_default'] = ((int) $language['id_lang'] === $defaultLang);
         }
         unset($language);
 
@@ -189,7 +189,7 @@ class InternautenB2BInfo extends Module
         $helper->token = Tools::getAdminTokenLite('AdminModules');
         $helper->currentIndex = AdminController::$currentIndex . '&configure=' . $this->name;
         $helper->default_form_language = $defaultLang;
-        $helper->allow_employee_form_lang = (int)Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG');
+        $helper->allow_employee_form_lang = (int) Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG');
         $helper->languages = $languages;
         $helper->title = $this->displayName;
         $helper->show_toolbar = true;
@@ -199,7 +199,7 @@ class InternautenB2BInfo extends Module
         $helper->fields_value['INTERNAUTENB2BINFO_GROUP_ID'] = Configuration::get('INTERNAUTENB2BINFO_GROUP_ID');
         $helper->fields_value['INTERNAUTENB2BINFO_ENABLED'] = Configuration::get('INTERNAUTENB2BINFO_ENABLED');
         foreach ($languages as $language) {
-            $idLang = (int)$language['id_lang'];
+            $idLang = (int) $language['id_lang'];
             $helper->fields_value['INTERNAUTENB2BINFO_GROUP_MESSAGE'][$idLang] = Configuration::get('INTERNAUTENB2BINFO_GROUP_MESSAGE', $idLang);
         }
 
@@ -232,10 +232,10 @@ class InternautenB2BInfo extends Module
         }
 
         // Get configured group ID
-        $targetGroupId = (int)Configuration::get('INTERNAUTENB2BINFO_GROUP_ID');
+        $targetGroupId = (int) Configuration::get('INTERNAUTENB2BINFO_GROUP_ID');
 
         // Check if customer's main (default) group matches target group
-        if ((int)$context->customer->id_default_group !== $targetGroupId) {
+        if ((int) $context->customer->id_default_group !== $targetGroupId) {
             return '';
         }
 
@@ -269,9 +269,9 @@ class InternautenB2BInfo extends Module
         // Do not show text if product has specific price
         if ($hasSpecificPrice) {
             // The presenter's regular_price still contains fixed group prices, so compute it without the group.
-            $idDefaultGroup = (int)Configuration::get('PS_CUSTOMER_GROUP');
-            $idCustomerGroup = (int)$context->customer->id_default_group;
-            $idCustomer = (int)$context->customer->id;
+            $idDefaultGroup = (int) Configuration::get('PS_CUSTOMER_GROUP');
+            $idCustomerGroup = (int) $context->customer->id_default_group;
+            $idCustomer = (int) $context->customer->id;
 
             // Always show the regular price incl. VAT, regardless of the group's tax display setting.
             $regularGross = $this->calculatePrice($presentedProduct, $context, $idDefaultGroup, 0, false, true);
@@ -292,9 +292,9 @@ class InternautenB2BInfo extends Module
             }
         } else {
             // Get the language-specific message with fallback to default language.
-            $message = Configuration::get('INTERNAUTENB2BINFO_GROUP_MESSAGE', (int)$context->language->id);
+            $message = Configuration::get('INTERNAUTENB2BINFO_GROUP_MESSAGE', (int) $context->language->id);
             if ($message === false || $message === null || $message === '') {
-                $message = Configuration::get('INTERNAUTENB2BINFO_GROUP_MESSAGE', (int)Configuration::get('PS_LANG_DEFAULT'));
+                $message = Configuration::get('INTERNAUTENB2BINFO_GROUP_MESSAGE', (int) Configuration::get('PS_LANG_DEFAULT'));
             }
         }
 
@@ -320,30 +320,30 @@ class InternautenB2BInfo extends Module
         bool $useReductions,
         bool $withTax
     ): ?float {
-        $idProduct = isset($presentedProduct->id_product) ? (int)$presentedProduct->id_product : 0;
+        $idProduct = isset($presentedProduct->id_product) ? (int) $presentedProduct->id_product : 0;
         if ($idProduct <= 0) {
             return null;
         }
 
-        $idProductAttribute = isset($presentedProduct->id_product_attribute) ? (int)$presentedProduct->id_product_attribute : 0;
-        $idCurrency = Validate::isLoadedObject($context->currency) ? (int)$context->currency->id : (int)Currency::getDefaultCurrencyId();
+        $idProductAttribute = isset($presentedProduct->id_product_attribute) ? (int) $presentedProduct->id_product_attribute : 0;
+        $idCurrency = Validate::isLoadedObject($context->currency) ? (int) $context->currency->id : (int) Currency::getDefaultCurrencyId();
 
         $idAddress = null;
         if (Validate::isLoadedObject($context->cart)) {
-            $idAddress = (int)$context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+            $idAddress = (int) $context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
         }
         $address = Address::initialize($idAddress, true);
 
-        $useTax = $withTax && (bool)Configuration::get('PS_TAX');
+        $useTax = $withTax && (bool) Configuration::get('PS_TAX');
 
         $specificPriceOutput = null;
         $price = Product::priceCalculation(
-            (int)$context->shop->id,
+            (int) $context->shop->id,
             $idProduct,
             $idProductAttribute,
-            (int)$address->id_country,
-            (int)$address->id_state,
-            (string)$address->postcode,
+            (int) $address->id_country,
+            (int) $address->id_state,
+            (string) $address->postcode,
             $idCurrency,
             $idGroup,
             1,
@@ -357,7 +357,7 @@ class InternautenB2BInfo extends Module
             $idCustomer
         );
 
-        return is_numeric($price) ? (float)$price : null;
+        return is_numeric($price) ? (float) $price : null;
     }
 
     private function formatPrice(float $amount, Context $context): ?string
